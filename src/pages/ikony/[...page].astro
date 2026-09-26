@@ -1,12 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import Shell from "../../layouts/Shell.astro";
-=> +b.data.pubDate - +a.data.pubDate);
 
-export async function getStaticPaths({ paginate }: { paginate: any }) {
-  const posts = (await getCollection("ikony")).sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-  );
+export async function getStaticPaths({ paginate }) {
+  const posts = (await getCollection("ikony")).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
   return paginate(posts, { pageSize: 9 });
 }
 
@@ -30,22 +27,20 @@ const { page } = Astro.props;
         </li>
       ))}
     </ol>
+    {page.lastPage > 1 && (
+      <nav class="mt-12 flex flex-wrap items-center justify-center gap-3 text-sm" aria-label="Paginacja">
+        {page.url.prev ? (
+          <a href={page.url.prev} class="underline-offset-2 hover:underline">← Nowsze</a>
+        ) : (
+          <span class="opacity-40">← Nowsze</span>
+        )}
+        <span class="tabular-nums opacity-70">{page.currentPage} / {page.lastPage}</span>
+        {page.url.next ? (
+          <a href={page.url.next} class="underline-offset-2 hover:underline">Starsze →</a>
+        ) : (
+          <span class="opacity-40">Starsze →</span>
+        )}
+      </nav>
+    )}
   </section>
-
-  {page.lastPage > 1 && (
-    <nav class="mt-12 flex flex-wrap items-center justify-center gap-3 text-sm" aria-label="Paginacja">
-      {page.url.prev ? (
-        <a href={page.url.prev} class="underline-offset-2 hover:underline">← Nowsze</a>
-      ) : (
-        <span class="opacity-40">← Nowsze</span>
-      )}
-      <span class="tabular-nums opacity-70">{page.currentPage} / {page.lastPage}</span>
-      {page.url.next ? (
-        <a href={page.url.next} class="underline-offset-2 hover:underline">Starsze →</a>
-      ) : (
-        <span class="opacity-40">Starsze →</span>
-      )}
-    </nav>
-  )}
-
 </Shell>
