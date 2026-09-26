@@ -1,0 +1,45 @@
+---
+import "../styles/global.css";
+const { title, description } = Astro.props;
+const path = Astro.url.pathname;
+---
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="canonical" href={`https://www.iconbeauty.pl${path}`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,620&family=Outfit:wght@360;520&display=swap" rel="stylesheet" />
+    <script is:inline>if(location.hostname==="iconbeauty.pl")location.replace(location.href.replace("://","://www."));</script>
+  </head>
+  <body class="bg-[#f4efe8] text-[#241814] font-sans">
+    <header class="mx-auto flex max-w-6xl items-end justify-between px-5 pt-6">
+      <a href="/" class="font-display text-5xl tracking-tight">ICON</a>
+      <nav class="flex gap-5 pb-2 text-xs uppercase tracking-[0.22em]">
+        <a href="/ikony/">Ikony</a>
+        <a href="/o-nas/">Redakcja</a>
+        <a href="/kontakt/">List</a>
+      </nav>
+    </header>
+    <slot />
+    
+    <footer class="mt-20 border-t border-[#241814]/10">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6 px-5 py-10">
+        <div>
+          <p class="font-display text-3xl">ICON</p>
+          <p class="mt-2 max-w-sm text-sm opacity-70">Uroda bez filtra z rolki. Skóra, światło, zapach, konkret.</p>
+        </div>
+        <div class="flex gap-5 text-sm">
+          <a href="/ikony/">Archiwum</a>
+          <a href="/o-nas/">O nas</a>
+          <a href="/kontakt/">Kontakt</a>
+          <a href="/polityka-prywatnosci/">Prywatność</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
