@@ -23,7 +23,9 @@ const path = Astro.url.pathname;
         <a href="/ikony/">Ikony</a>
         <a href="/o-nas/">Redakcja</a>
         <a href="/kontakt/">List</a>
-      </nav>
+      <a href="/tematy/">Tematy</a>
+          <a href="/w-lazience/">Szukaj</a>
+        </nav>
     </header>
     <slot />
     
@@ -41,5 +43,14 @@ const path = Astro.url.pathname;
         </div>
       </div>
     </footer>
+  <div id="pasek-icon-beauty" style="position:fixed;top:0;left:0;height:3px;width:0;background:#9a6a58;z-index:40;pointer-events:none"></div>
+    <script>
+      const pasek = document.getElementById("pasek-icon-beauty");
+      addEventListener("scroll", () => {
+        const node = document.documentElement;
+        const max = node.scrollHeight - node.clientHeight;
+        pasek.style.width = (max > 0 ? (node.scrollTop / max) * 100 : 0) + "%";
+      }, { passive: true });
+    </script>
   </body>
 </html>

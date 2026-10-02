@@ -4,6 +4,12 @@ import Shell from "../layouts/Shell.astro";
 const posts = (await getCollection("ikony")).sort((a, b) => +b.data.pubDate - +a.data.pubDate);
 const lead = posts[0];
 const rest = posts.slice(1, 9);
+
+const dzialy = [...new Set(posts.map((post) => post.data.category).filter(Boolean))].map((name) => ({
+  name,
+  slug: String(name).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ł/g, "l").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+}));
+
 ---
 <Shell title="ICON | uroda bez filtra" description="Redakcja urody ICON: skóra, makijaż, zapach i światło w łazience. Warszawa.">
   <section class="mx-auto grid max-w-6xl items-end gap-8 px-5 pb-8 pt-10 md:grid-cols-12">
@@ -30,4 +36,20 @@ const rest = posts.slice(1, 9);
       </a>
     ))}
   </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-12">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-[0.22em] opacity-60">Działy</p>
+        <h2 class="mt-1 font-display text-4xl">Tematy</h2>
+      </div>
+      <a class="text-sm underline-offset-2 hover:underline" href="/tematy/">Wszystkie działy</a>
+    </div>
+    <div class="mt-6 flex flex-wrap gap-2">
+      {dzialy.map((item) => (
+        <a class="border border-black/10 px-3 py-2 text-sm hover:opacity-80" href={`/tematy/${item.slug}/`}>{item.name}</a>
+      ))}
+    </div>
+  </section>
+
 </Shell>
