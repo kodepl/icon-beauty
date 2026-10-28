@@ -20,40 +20,54 @@ const headings = (post.body || "").split("\n").filter((line) => line.startsWith(
 });
 const related = (await getCollection("ikony")).filter((item) => item.slug !== post.slug && item.data.category && item.data.category === post.data.category).slice(0, 3);
 const { Content } = await post.render();
+const pageUrl = `https://www.iconbeauty.pl/ikony/${post.slug}/`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  image: post.data.image ? [post.data.image] : undefined,
+  author: { "@type": "Person", name: post.data.author || "Lena Markowska" },
+  publisher: { "@type": "Organization", name: "ICON", url: "https://www.iconbeauty.pl/" },
+  mainEntityOfPage: pageUrl,
+  inLanguage: "pl-PL",
+};
 ---
-<Shell title={post.data.title} description={post.data.description}>
+<Shell title={`${post.data.title} | ICON`} description={post.data.description} image={post.data.image} type="article">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <article class="mx-auto max-w-3xl px-5 py-12">
-    <p class="text-xs uppercase tracking-[0.28em] opacity-60"><a href={`/tematy/${slugify(post.data.category)}/`}>{post.data.category}</a></p>
+    <p class="text-[11px] uppercase tracking-[0.28em] text-oxblood"><a href={`/tematy/${slugify(post.data.category)}/`}>{post.data.category}</a></p>
     <h1 class="mt-3 font-display text-5xl leading-[1.05]">{post.data.title}</h1>
-    <p class="mt-4 text-sm opacity-70">{post.data.author} · {post.data.pubDate.toLocaleDateString("pl-PL")} · {post.data.readingTime}</p>
-    {post.data.image && <img src={post.data.image} alt="" class="mt-8 w-full max-h-[32rem] object-cover" />}
+    <p class="mt-4 text-sm text-[var(--mute)]">{post.data.author} · <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString("pl-PL")}</time> · {post.data.readingTime}</p>
+    {post.data.image && <img src={post.data.image} alt="" class="mt-8 w-full max-h-[32rem] object-cover" width="1400" height="900" />}
     {headings.length > 1 && (
-      <nav class="mt-8 border border-black/10 p-4 text-sm" aria-label="W tym tekście">
-        <p class="text-xs uppercase tracking-[0.18em] opacity-60">W tym tekście</p>
+      <nav class="mt-8 border border-[var(--line)] p-4 text-sm" aria-label="W tym tekście">
+        <p class="text-[11px] uppercase tracking-[0.18em] text-[var(--mute)]">W tym tekście</p>
         <ol class="mt-3 space-y-1">
           {headings.map((item) => <li><a class="underline-offset-2 hover:underline" href={"#" + item.id}>{item.text}</a></li>)}
         </ol>
       </nav>
     )}
-    <div class="prose prose-lg mt-10 max-w-none prose-headings:font-display prose-p:text-[#241814]">
+    <div class="prose prose-lg mt-10 max-w-none prose-headings:font-display prose-p:text-ink">
       <Content />
     </div>
     {post.data.authorBio && (
-      <aside class="mt-12 border border-black/10 p-5">
-        <p class="text-xs uppercase tracking-[0.18em] opacity-60">Kto pisze</p>
+      <aside class="mt-12 border border-[var(--line)] p-5">
+        <p class="text-[11px] uppercase tracking-[0.18em] text-[var(--mute)]">Kto pisze</p>
         <p class="mt-2 font-display text-2xl">{post.data.author}</p>
-        <p class="mt-2 text-sm leading-relaxed opacity-75">{post.data.authorBio}</p>
+        <p class="mt-2 text-sm leading-relaxed text-[var(--mute)]">{post.data.authorBio}</p>
       </aside>
     )}
     {related.length > 0 && (
       <section class="mt-10">
-        <p class="text-xs uppercase tracking-[0.18em] opacity-60">Z tej samej półki</p>
+        <p class="text-[11px] uppercase tracking-[0.18em] text-[var(--mute)]">Z tej samej półki</p>
         <ul class="mt-3 space-y-2">
           {related.map((item) => <li><a class="font-display text-2xl underline-offset-2 hover:underline" href={`/ikony/${item.slug}/`}>{item.data.title}</a></li>)}
         </ul>
       </section>
     )}
-    <nav class="mt-14 grid gap-4 border-t border-black/10 pt-6 sm:grid-cols-2">
+    <nav class="mt-14 grid gap-4 border-t border-[var(--line)] pt-6 sm:grid-cols-2">
       {newer && <a href={`/ikony/${newer.slug}/`}>Nowszy<br/><span class="font-display text-xl">{newer.data.title}</span></a>}
       {older && <a class="sm:text-right" href={`/ikony/${older.slug}/`}>Starszy<br/><span class="font-display text-xl">{older.data.title}</span></a>}
     </nav>

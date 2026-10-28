@@ -1,3 +1,66 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --ink: #141210;
+  --paper: #e9e7e2;
+  --paper-deep: #ddd9d2;
+  --oxblood: #6b2d3c;
+  --oxblood-soft: #8a4558;
+  --mute: rgba(20, 18, 16, 0.62);
+  --line: rgba(20, 18, 16, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-feature-settings: "ss01" on, "kern" on;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(107, 45, 60, 0.07), transparent 55%),
+    linear-gradient(180deg, #eceae5 0%, var(--paper) 28%, #e6e3dd 100%);
+  min-height: 100%;
+}
+
+::selection {
+  background: rgba(107, 45, 60, 0.18);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+}
+
+.prose a {
+  color: var(--oxblood);
+}
+
+.prose h2,
+.prose h3 {
+  scroll-margin-top: 5rem;
+}
+
+.site-nav a[aria-current="page"] {
+  color: var(--oxblood);
+}
+
+@keyframes icon-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rise {
+  animation: icon-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.rise-delay {
+  animation-delay: 0.12s;
+}
+
+.rise-delay-2 {
+  animation-delay: 0.24s;
+}

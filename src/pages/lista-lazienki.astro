@@ -1,0 +1,105 @@
+---
+import Shell from "../layouts/Shell.astro";
+
+const morning = [
+  "Mycie twarzy letnią wodą, bez drapania",
+  "Krem pod oczy: odrobina, wklepanie, bez białych smug",
+  "Nawilżenie twarzy, które się wchłania zanim wyjdę",
+  "SPF, nawet gdy niebo jest szare",
+  "Makijaż tylko tam, gdzie naprawdę potrzebuję",
+];
+const evening = [
+  "Zdjąć makijaż zanim krem",
+  "Drugie mycie, jeśli dzień był brudny lub wietrzny",
+  "Aktywny składnik albo przerwa, nie wszystko naraz",
+  "Krem na noc w cienkiej warstwie",
+  "Dłonie i szyja, jeśli twarz już dostała swoją kolejkę",
+];
+const shelf = [
+  "Szczotka do włosów: czy nie zbiera kurzu od miesięcy?",
+  "Ręcznik twarzowy suchy i czysty",
+  "Kosmetyczka: wyrzucić to, co skończone lub zjełczałe",
+  "Światło przy lustrze: nie tylko żarówka z sufitu",
+];
+---
+<Shell title="Lista łazienki | ICON" description="Prosta lista poranka, wieczoru i półki. Zaznaczasz u siebie, nic nie wysyłamy.">
+  <section class="mx-auto max-w-3xl px-5 py-14">
+    <p class="text-[11px] uppercase tracking-[0.22em] text-oxblood">Narzędzie</p>
+    <h1 class="mt-2 font-display text-5xl leading-tight">Lista łazienki</h1>
+    <p class="mt-4 max-w-xl text-lg text-[var(--mute)]">Zaznacz kroki, które dziś robisz. Stan zostaje w tej przeglądarce. Bez konta i bez wysyłania danych.</p>
+
+    <div class="mt-10 space-y-10" id="lista-lazienki" data-key="icon-lista-lazienki-v1">
+      <section>
+        <h2 class="font-display text-3xl">Poranek</h2>
+        <ul class="mt-4 space-y-2" data-group="morning">
+          {morning.map((label, i) => (
+            <li>
+              <label class="flex cursor-pointer items-start gap-3 border border-[var(--line)] bg-paper/70 px-4 py-3 hover:border-oxblood/30">
+                <input type="checkbox" class="mt-1 accent-oxblood" data-id={`m-${i}`} />
+                <span>{label}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section>
+        <h2 class="font-display text-3xl">Wieczór</h2>
+        <ul class="mt-4 space-y-2" data-group="evening">
+          {evening.map((label, i) => (
+            <li>
+              <label class="flex cursor-pointer items-start gap-3 border border-[var(--line)] bg-paper/70 px-4 py-3 hover:border-oxblood/30">
+                <input type="checkbox" class="mt-1 accent-oxblood" data-id={`e-${i}`} />
+                <span>{label}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section>
+        <h2 class="font-display text-3xl">Półka</h2>
+        <ul class="mt-4 space-y-2" data-group="shelf">
+          {shelf.map((label, i) => (
+            <li>
+              <label class="flex cursor-pointer items-start gap-3 border border-[var(--line)] bg-paper/70 px-4 py-3 hover:border-oxblood/30">
+                <input type="checkbox" class="mt-1 accent-oxblood" data-id={`s-${i}`} />
+                <span>{label}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <div class="flex flex-wrap items-center gap-4">
+        <p id="lista-status" class="text-sm text-[var(--mute)]"></p>
+        <button type="button" id="lista-reset" class="border border-[var(--line)] px-4 py-2 text-sm hover:border-oxblood/40">Wyczyść zaznaczenia</button>
+      </div>
+    </div>
+  </section>
+</Shell>
+<script>
+  const root = document.getElementById("lista-lazienki");
+  const key = root?.getAttribute("data-key") || "icon-lista";
+  const status = document.getElementById("lista-status");
+  const boxes = [...document.querySelectorAll("#lista-lazienki input[type=checkbox]")];
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch {}
+  boxes.forEach((box) => {
+    const id = box.getAttribute("data-id");
+    box.checked = !!saved[id];
+    box.addEventListener("change", () => {
+      saved[id] = box.checked;
+      localStorage.setItem(key, JSON.stringify(saved));
+      paint();
+    });
+  });
+  function paint() {
+    const done = boxes.filter((b) => b.checked).length;
+    if (status) status.textContent = done + " z " + boxes.length + " zaznaczonych";
+  }
+  document.getElementById("lista-reset")?.addEventListener("click", () => {
+    saved = {};
+    localStorage.removeItem(key);
+    boxes.forEach((b) => { b.checked = false; });
+    paint();
+  });
+  paint();
+</script>
